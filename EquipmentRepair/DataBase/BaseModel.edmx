@@ -1,0 +1,463 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище EquipmentRepairModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Division">
+          <Key>
+            <PropertyRef Name="DivisionId" />
+          </Key>
+          <Property Name="DivisionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DivisionName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="EmployeeId" />
+          </Key>
+          <Property Name="EmployeeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StartWorkingDate" Type="date" Nullable="false" />
+          <Property Name="EndWorkingDate" Type="date" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="MiddleName" Type="varchar" MaxLength="100" />
+          <Property Name="DivisionId" Type="int" Nullable="false" />
+          <Property Name="Post" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ParePart">
+          <Key>
+            <PropertyRef Name="ParePartId" />
+          </Key>
+          <Property Name="ParePartId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParePartName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Cost" Type="money" Nullable="false" />
+          <Property Name="DataAcquisition" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Repair">
+          <Key>
+            <PropertyRef Name="RepairId" />
+          </Key>
+          <Property Name="RepairId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="TechnicId" Type="int" Nullable="false" />
+          <Property Name="IdEmployeeWhoStartedTheRepair" Type="int" Nullable="false" />
+          <Property Name="IdParePart" Type="int" Nullable="false" />
+          <Property Name="IdEmployeeWhoAcceptedTheRepair" Type="int" Nullable="false" />
+          <Property Name="IdEmployeePerformingTheRepair" Type="int" Nullable="false" />
+          <Property Name="TermOfRepair" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="TypeOfRepair" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Technic">
+          <Key>
+            <PropertyRef Name="TechnicId" />
+          </Key>
+          <Property Name="TechnicId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TechnicName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="InventoryNumber" Type="int" Nullable="false" />
+          <Property Name="Model" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="YearOfIssue" Type="int" Nullable="false" />
+          <Property Name="DivisionId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Employee_Division">
+          <End Role="Division" Type="Self.Division" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Division">
+              <PropertyRef Name="DivisionId" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="DivisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Repair_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Repair" Type="Self.Repair" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="Repair">
+              <PropertyRef Name="IdEmployeeWhoStartedTheRepair" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Repair_Employee1">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Repair" Type="Self.Repair" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="Repair">
+              <PropertyRef Name="IdEmployeeWhoAcceptedTheRepair" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Repair_Employee2">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Repair" Type="Self.Repair" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="Repair">
+              <PropertyRef Name="IdEmployeePerformingTheRepair" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Repair_ParePart">
+          <End Role="ParePart" Type="Self.ParePart" Multiplicity="1" />
+          <End Role="Repair" Type="Self.Repair" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ParePart">
+              <PropertyRef Name="ParePartId" />
+            </Principal>
+            <Dependent Role="Repair">
+              <PropertyRef Name="IdParePart" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Repair_Technic">
+          <End Role="Technic" Type="Self.Technic" Multiplicity="1" />
+          <End Role="Repair" Type="Self.Repair" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Technic">
+              <PropertyRef Name="TechnicId" />
+            </Principal>
+            <Dependent Role="Repair">
+              <PropertyRef Name="TechnicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Technic_Division">
+          <End Role="Division" Type="Self.Division" Multiplicity="1" />
+          <End Role="Technic" Type="Self.Technic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Division">
+              <PropertyRef Name="DivisionId" />
+            </Principal>
+            <Dependent Role="Technic">
+              <PropertyRef Name="DivisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище EquipmentRepairModelContainer">
+          <EntitySet Name="Division" EntityType="Self.Division" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ParePart" EntityType="Self.ParePart" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Repair" EntityType="Self.Repair" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Technic" EntityType="Self.Technic" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Employee_Division" Association="Self.FK_Employee_Division">
+            <End Role="Division" EntitySet="Division" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Repair_Employee" Association="Self.FK_Repair_Employee">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Repair" EntitySet="Repair" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Repair_Employee1" Association="Self.FK_Repair_Employee1">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Repair" EntitySet="Repair" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Repair_Employee2" Association="Self.FK_Repair_Employee2">
+            <End Role="Employee" EntitySet="Employee" />
+            <End Role="Repair" EntitySet="Repair" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Repair_ParePart" Association="Self.FK_Repair_ParePart">
+            <End Role="ParePart" EntitySet="ParePart" />
+            <End Role="Repair" EntitySet="Repair" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Repair_Technic" Association="Self.FK_Repair_Technic">
+            <End Role="Technic" EntitySet="Technic" />
+            <End Role="Repair" EntitySet="Repair" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Technic_Division" Association="Self.FK_Technic_Division">
+            <End Role="Division" EntitySet="Division" />
+            <End Role="Technic" EntitySet="Technic" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EquipmentRepairModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Division">
+          <Key>
+            <PropertyRef Name="DivisionId" />
+          </Key>
+          <Property Name="DivisionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DivisionName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Technics" Relationship="Self.FK_Technic_Division" FromRole="Division" ToRole="Technic" />
+          <NavigationProperty Name="Employees" Relationship="EquipmentRepairModel.FK_Employee_Division" FromRole="Division" ToRole="Employee" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="EmployeeId" />
+          </Key>
+          <Property Name="EmployeeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StartWorkingDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndWorkingDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DivisionId" Type="Int32" Nullable="false" />
+          <Property Name="Post" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Repairs" Relationship="Self.FK_Repair_Employee" FromRole="Employee" ToRole="Repair" />
+          <NavigationProperty Name="Repairs1" Relationship="Self.FK_Repair_Employee1" FromRole="Employee" ToRole="Repair" />
+          <NavigationProperty Name="Repairs2" Relationship="Self.FK_Repair_Employee2" FromRole="Employee" ToRole="Repair" />
+          <NavigationProperty Name="Division" Relationship="EquipmentRepairModel.FK_Employee_Division" FromRole="Employee" ToRole="Division" />
+        </EntityType>
+        <EntityType Name="ParePart">
+          <Key>
+            <PropertyRef Name="ParePartId" />
+          </Key>
+          <Property Name="ParePartId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParePartName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Cost" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="DataAcquisition" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Repairs" Relationship="Self.FK_Repair_ParePart" FromRole="ParePart" ToRole="Repair" />
+        </EntityType>
+        <EntityType Name="Repair">
+          <Key>
+            <PropertyRef Name="RepairId" />
+          </Key>
+          <Property Name="RepairId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="TechnicId" Type="Int32" Nullable="false" />
+          <Property Name="IdEmployeeWhoStartedTheRepair" Type="Int32" Nullable="false" />
+          <Property Name="IdParePart" Type="Int32" Nullable="false" />
+          <Property Name="IdEmployeeWhoAcceptedTheRepair" Type="Int32" Nullable="false" />
+          <Property Name="IdEmployeePerformingTheRepair" Type="Int32" Nullable="false" />
+          <Property Name="TermOfRepair" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TypeOfRepair" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Employee" Relationship="Self.FK_Repair_Employee" FromRole="Repair" ToRole="Employee" />
+          <NavigationProperty Name="Employee1" Relationship="Self.FK_Repair_Employee1" FromRole="Repair" ToRole="Employee" />
+          <NavigationProperty Name="Employee2" Relationship="Self.FK_Repair_Employee2" FromRole="Repair" ToRole="Employee" />
+          <NavigationProperty Name="ParePart" Relationship="Self.FK_Repair_ParePart" FromRole="Repair" ToRole="ParePart" />
+          <NavigationProperty Name="Technic" Relationship="Self.FK_Repair_Technic" FromRole="Repair" ToRole="Technic" />
+        </EntityType>
+        <EntityType Name="Technic">
+          <Key>
+            <PropertyRef Name="TechnicId" />
+          </Key>
+          <Property Name="TechnicId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TechnicName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="InventoryNumber" Type="Int32" Nullable="false" />
+          <Property Name="Model" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="YearOfIssue" Type="Int32" Nullable="false" />
+          <Property Name="DivisionId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Division" Relationship="Self.FK_Technic_Division" FromRole="Technic" ToRole="Division" />
+          <NavigationProperty Name="Repairs" Relationship="Self.FK_Repair_Technic" FromRole="Technic" ToRole="Repair" />
+        </EntityType>
+        <Association Name="FK_Technic_Division">
+          <End Role="Division" Type="Self.Division" Multiplicity="1" />
+          <End Role="Technic" Type="Self.Technic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Division">
+              <PropertyRef Name="DivisionId" />
+            </Principal>
+            <Dependent Role="Technic">
+              <PropertyRef Name="DivisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Repair_Employee">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Repair" Type="Self.Repair" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="Repair">
+              <PropertyRef Name="IdEmployeeWhoStartedTheRepair" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Repair_Employee1">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Repair" Type="Self.Repair" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="Repair">
+              <PropertyRef Name="IdEmployeeWhoAcceptedTheRepair" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Repair_Employee2">
+          <End Role="Employee" Type="Self.Employee" Multiplicity="1" />
+          <End Role="Repair" Type="Self.Repair" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Employee">
+              <PropertyRef Name="EmployeeId" />
+            </Principal>
+            <Dependent Role="Repair">
+              <PropertyRef Name="IdEmployeePerformingTheRepair" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Repair_ParePart">
+          <End Role="ParePart" Type="Self.ParePart" Multiplicity="1" />
+          <End Role="Repair" Type="Self.Repair" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ParePart">
+              <PropertyRef Name="ParePartId" />
+            </Principal>
+            <Dependent Role="Repair">
+              <PropertyRef Name="IdParePart" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Repair_Technic">
+          <End Role="Technic" Type="Self.Technic" Multiplicity="1" />
+          <End Role="Repair" Type="Self.Repair" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Technic">
+              <PropertyRef Name="TechnicId" />
+            </Principal>
+            <Dependent Role="Repair">
+              <PropertyRef Name="TechnicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EquipmentRepairEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Divisions" EntityType="Self.Division" />
+          <EntitySet Name="Employees" EntityType="Self.Employee" />
+          <EntitySet Name="PareParts" EntityType="Self.ParePart" />
+          <EntitySet Name="Repairs" EntityType="Self.Repair" />
+          <EntitySet Name="Technics" EntityType="Self.Technic" />
+          <AssociationSet Name="FK_Technic_Division" Association="Self.FK_Technic_Division">
+            <End Role="Division" EntitySet="Divisions" />
+            <End Role="Technic" EntitySet="Technics" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Repair_Employee" Association="Self.FK_Repair_Employee">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Repair" EntitySet="Repairs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Repair_Employee1" Association="Self.FK_Repair_Employee1">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Repair" EntitySet="Repairs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Repair_Employee2" Association="Self.FK_Repair_Employee2">
+            <End Role="Employee" EntitySet="Employees" />
+            <End Role="Repair" EntitySet="Repairs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Repair_ParePart" Association="Self.FK_Repair_ParePart">
+            <End Role="ParePart" EntitySet="PareParts" />
+            <End Role="Repair" EntitySet="Repairs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Repair_Technic" Association="Self.FK_Repair_Technic">
+            <End Role="Technic" EntitySet="Technics" />
+            <End Role="Repair" EntitySet="Repairs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Employee_Division" Association="EquipmentRepairModel.FK_Employee_Division">
+            <End Role="Division" EntitySet="Divisions" />
+            <End Role="Employee" EntitySet="Employees" />
+          </AssociationSet>
+        </EntityContainer>
+        <Association Name="FK_Employee_Division">
+          <End Type="EquipmentRepairModel.Division" Role="Division" Multiplicity="1" />
+          <End Type="EquipmentRepairModel.Employee" Role="Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Division">
+              <PropertyRef Name="DivisionId" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="DivisionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище EquipmentRepairModelContainer" CdmEntityContainer="EquipmentRepairEntities">
+          <EntitySetMapping Name="Divisions">
+            <EntityTypeMapping TypeName="EquipmentRepairModel.Division">
+              <MappingFragment StoreEntitySet="Division">
+                <ScalarProperty Name="DivisionId" ColumnName="DivisionId" />
+                <ScalarProperty Name="DivisionName" ColumnName="DivisionName" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="EquipmentRepairModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+                <ScalarProperty Name="StartWorkingDate" ColumnName="StartWorkingDate" />
+                <ScalarProperty Name="EndWorkingDate" ColumnName="EndWorkingDate" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="DivisionId" ColumnName="DivisionId" />
+                <ScalarProperty Name="Post" ColumnName="Post" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PareParts">
+            <EntityTypeMapping TypeName="EquipmentRepairModel.ParePart">
+              <MappingFragment StoreEntitySet="ParePart">
+                <ScalarProperty Name="ParePartId" ColumnName="ParePartId" />
+                <ScalarProperty Name="ParePartName" ColumnName="ParePartName" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="DataAcquisition" ColumnName="DataAcquisition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Repairs">
+            <EntityTypeMapping TypeName="EquipmentRepairModel.Repair">
+              <MappingFragment StoreEntitySet="Repair">
+                <ScalarProperty Name="RepairId" ColumnName="RepairId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="TechnicId" ColumnName="TechnicId" />
+                <ScalarProperty Name="IdEmployeeWhoStartedTheRepair" ColumnName="IdEmployeeWhoStartedTheRepair" />
+                <ScalarProperty Name="IdParePart" ColumnName="IdParePart" />
+                <ScalarProperty Name="IdEmployeeWhoAcceptedTheRepair" ColumnName="IdEmployeeWhoAcceptedTheRepair" />
+                <ScalarProperty Name="IdEmployeePerformingTheRepair" ColumnName="IdEmployeePerformingTheRepair" />
+                <ScalarProperty Name="TermOfRepair" ColumnName="TermOfRepair" />
+                <ScalarProperty Name="TypeOfRepair" ColumnName="TypeOfRepair" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Technics">
+            <EntityTypeMapping TypeName="EquipmentRepairModel.Technic">
+              <MappingFragment StoreEntitySet="Technic">
+                <ScalarProperty Name="TechnicId" ColumnName="TechnicId" />
+                <ScalarProperty Name="TechnicName" ColumnName="TechnicName" />
+                <ScalarProperty Name="InventoryNumber" ColumnName="InventoryNumber" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="YearOfIssue" ColumnName="YearOfIssue" />
+                <ScalarProperty Name="DivisionId" ColumnName="DivisionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
